@@ -23,7 +23,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .addServersItem(localServer)
-                .info(new Info().title("Swagger API 명세서").version("1.0").description("PBL-SeongbukSquare"));
+                .info(new Info().title("Swagger API 명세서").version("1.0").description("PBL SeongbukSquare"));
     }
 
     @Bean
