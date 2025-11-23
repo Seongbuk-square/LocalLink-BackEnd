@@ -18,7 +18,7 @@ public class CosmeticsTrans {
     private String languageCode;
 
     @Column(nullable = false)
-    private String cosmeticsName;
+    private String cosmeticName;
 
     @Column(nullable = false)
     private String companyName;

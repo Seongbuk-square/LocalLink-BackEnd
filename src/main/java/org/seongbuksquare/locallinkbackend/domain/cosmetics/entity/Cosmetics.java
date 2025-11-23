@@ -28,7 +28,8 @@ public class Cosmetics {
     private String cosmeticImageKey;
 
     // 1:N
-    @OneToMany(mappedBy = "cosmetic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cosmetics", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<CosmeticsTrans> cosmeticsTransList = new ArrayList<>();
 
     // 편의 메서드 (양방향 연결)
