@@ -5,10 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.seongbuksquare.locallinkbackend.domain.cosmetics.dto.response.CosmeticsResponse;
 import org.seongbuksquare.locallinkbackend.domain.cosmetics.entity.Cosmetics;
 import org.seongbuksquare.locallinkbackend.domain.cosmetics.entity.CosmeticsTrans;
+import org.seongbuksquare.locallinkbackend.domain.cosmetics.exception.CosmeticsErrorCode;
 import org.seongbuksquare.locallinkbackend.domain.cosmetics.repository.CosmeticsRepository;
+import org.seongbuksquare.locallinkbackend.global.exception.CustomException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,35 +23,36 @@ public class CosmeticsService {
     public List<CosmeticsResponse> getAllCosmeticsByRanking(String languageCode) {
 
         log.info("[CosmeticsService] 랭킹 순 화장품 전체 조회 시도");
+
         List<Cosmetics> cosmeticsList = cosmeticsRepository.findAllByOrderByRankingAsc();
 
-        return cosmeticsList.stream()
+        if (cosmeticsList.isEmpty()) {
+            throw new CustomException(CosmeticsErrorCode.COSMETICS_NOT_FOUND); // 등록된 화장품 없을 때
+        }
+
+        List<CosmeticsResponse> responseList = cosmeticsList.stream()
                 .map(cosmetic -> {
-                    // 해당 cosmetic의 언어 번역 선택
+                    // 언어 번역 선택, 없으면 기본 언어 ko
                     CosmeticsTrans trans = cosmetic.getCosmeticsTransList().stream()
                             .filter(t -> t.getLanguageCode().equals(languageCode))
                             .findFirst()
-                            .orElse(null);
-
-                    // 혹시 해당 언어 번역이 없으면 기본 언어(예: ko)로 fallback
-                    if (trans == null) {
-                        trans = cosmetic.getCosmeticsTransList().stream()
-                                .filter(t -> t.getLanguageCode().equals("ko"))
-                                .findFirst()
-                                .orElse(null);
-                    }
-
-                    log.info("[CosmeticsService] 랭킹 순 화장품 전체 조회 성공");
+                            .or(() -> cosmetic.getCosmeticsTransList().stream()
+                                    .filter(t -> t.getLanguageCode().equals("ko"))
+                                    .findFirst()
+                            )
+                            .orElseThrow(() -> new CustomException(CosmeticsErrorCode.COSMETICS_NOT_FOUND));
 
                     return CosmeticsResponse.builder()
                             .cosmeticId(cosmetic.getCosmeticId())
                             .ranking(cosmetic.getRanking())
                             .cosmeticImageKey(cosmetic.getCosmeticImageKey())
-                            .cosmeticName(trans != null ? trans.getCosmeticName() : null)
-                            .companyName(trans != null ? trans.getCompanyName() : null)
+                            .cosmeticName(trans.getCosmeticName())
+                            .companyName(trans.getCompanyName())
                             .build();
                 })
                 .toList();
 
+        log.info("[CosmeticsService] 랭킹 순 화장품 전체 조회 성공");
+        return responseList;
     }
 }
