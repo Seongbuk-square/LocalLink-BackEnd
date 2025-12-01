@@ -1,37 +1,59 @@
 package org.seongbuksquare.locallinkbackend.global.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
+    @Value("${spring.cloud.config.username}")
+    private String username;
 
-    // CORS 설정 주입 (CorsConfig.java에서 만든 Bean)
-    private final UrlBasedCorsConfigurationSource corsConfigurationSource;
+    @Value("${spring.cloud.config.password}")
+    private String password;
 
-    public SecurityConfig(UrlBasedCorsConfigurationSource corsConfigurationSource) {
-        this.corsConfigurationSource = corsConfigurationSource;
+    // CorsConfig에서 만든 CORS 설정을 주입받기
+    @Autowired
+    private UrlBasedCorsConfigurationSource corsConfigurationSource;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // CSRF (Cross-Site Request Forgery) 보호 비활성화
-                .csrf(AbstractHttpConfigurer::disable)
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // CORS 설정 추가
+                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll()) // 모든 요청 허용
+                // .httpBasic(Customizer.withDefaults())
+                .build();
+    }
 
-                // CORS 설정 적용
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
+    @Bean
+    public UserDetailsService userDetailsService() {
 
-                // 모든 요청에 대해 인증 없이 접근 허용
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        UserDetails admin =
+                User.builder()
+                        .username(username)
+                        .password(passwordEncoder().encode(password))
+                        .roles("ADMIN")
+                        .build();
 
-        // 로그인 폼, HTTP Basic 인증 등 전부 비활성화됨
-        return http.build();
+        return new InMemoryUserDetailsManager(admin);
     }
 }
+
