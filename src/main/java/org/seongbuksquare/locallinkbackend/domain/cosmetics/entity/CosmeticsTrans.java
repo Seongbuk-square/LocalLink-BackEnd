@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="cosmetics_trans")
 public class CosmeticsTrans {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
