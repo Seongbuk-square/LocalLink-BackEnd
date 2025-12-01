@@ -42,17 +42,21 @@ public class CosmeticsService {
                             )
                             .orElseThrow(() -> new CustomException(CosmeticsErrorCode.COSMETICS_NOT_FOUND));
 
-                    return CosmeticsResponse.builder()
-                            .cosmeticId(cosmetic.getCosmeticId())
-                            .ranking(cosmetic.getRanking())
-                            .cosmeticImageKey(cosmetic.getCosmeticImageKey())
-                            .cosmeticName(trans.getCosmeticName())
-                            .companyName(trans.getCompanyName())
-                            .build();
+                    return toCosmeticsResponse(cosmetic, trans);
                 })
                 .toList();
 
         log.info("[CosmeticsService] 랭킹 순 화장품 전체 조회 성공");
         return responseList;
+    }
+
+    public CosmeticsResponse toCosmeticsResponse(Cosmetics cosmetic, CosmeticsTrans trans) {
+        return CosmeticsResponse.builder()
+                .cosmeticId(cosmetic.getCosmeticId())
+                .ranking(cosmetic.getRanking())
+                .cosmeticImageKey(cosmetic.getCosmeticImageKey())
+                .cosmeticName(trans.getCosmeticName())
+                .companyName(trans.getCompanyName())
+                .build();
     }
 }
