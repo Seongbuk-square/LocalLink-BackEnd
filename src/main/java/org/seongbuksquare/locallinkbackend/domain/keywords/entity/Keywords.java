@@ -2,7 +2,6 @@ package org.seongbuksquare.locallinkbackend.domain.keywords.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.seongbuksquare.locallinkbackend.domain.cosmetics.entity.CosmeticsTrans;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class Keywords {
     private Integer keywordId;
 
     @Column(nullable=false)
-    private Integer searchRanking;
+    private Integer keywordRanking;
 
     // 1:N
     @OneToMany(mappedBy = "keywords", cascade = CascadeType.ALL, orphanRemoval = true)

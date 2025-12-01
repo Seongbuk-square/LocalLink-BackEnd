@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="keyword_trans")
+@Table(name="keywords_trans")
 public class KeywordsTrans {
 
     @Id
