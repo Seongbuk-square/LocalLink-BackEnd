@@ -11,7 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="keywords_trans")
+@Table(
+        name = "keywords_trans",
+        uniqueConstraints = {
+            @UniqueConstraint(
+                    name = "uk_keyword_language",
+                    columnNames = {"keyword_id", "languageCode"})
+        })
 public class KeywordsTrans {
 
     @Id
@@ -27,5 +33,4 @@ public class KeywordsTrans {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "keyword_id", nullable = false)
     private Keywords keywords;
-
 }

@@ -9,7 +9,14 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="cosmetics_trans")
+@Table(
+        name = "cosmetics_trans",
+        uniqueConstraints = {
+            @UniqueConstraint(
+                    name = "uk_cosmetic_language",
+                    columnNames = {"cosmetic_id", "languageCode"} // 엔티티 필드명 혹은 DB 컬럼명 확인
+                    )
+        })
 public class CosmeticsTrans {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

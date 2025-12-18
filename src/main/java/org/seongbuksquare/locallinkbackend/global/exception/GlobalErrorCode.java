@@ -16,4 +16,3 @@ public enum GlobalErrorCode implements BaseErrorCode {
     private final String message;
     private final HttpStatus status;
 }
-
