@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum KeywordsErrorCode implements BaseErrorCode {
-
     KEYWORDS_NOT_FOUND("KEYWORDS_4001", "해당 인기 검색어를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String code;

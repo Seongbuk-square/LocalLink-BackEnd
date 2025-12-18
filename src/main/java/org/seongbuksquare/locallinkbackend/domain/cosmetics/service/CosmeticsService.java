@@ -1,5 +1,6 @@
 package org.seongbuksquare.locallinkbackend.domain.cosmetics.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.seongbuksquare.locallinkbackend.domain.cosmetics.dto.response.CosmeticsResponse;
@@ -9,8 +10,6 @@ import org.seongbuksquare.locallinkbackend.domain.cosmetics.exception.CosmeticsE
 import org.seongbuksquare.locallinkbackend.domain.cosmetics.repository.CosmeticsRepository;
 import org.seongbuksquare.locallinkbackend.global.exception.CustomException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -38,8 +37,7 @@ public class CosmeticsService {
                             .findFirst()
                             .or(() -> cosmetic.getCosmeticsTransList().stream()
                                     .filter(t -> t.getLanguageCode().equals("ko"))
-                                    .findFirst()
-                            )
+                                    .findFirst())
                             .orElseThrow(() -> new CustomException(CosmeticsErrorCode.COSMETICS_NOT_FOUND));
 
                     return CosmeticsResponse.builder()

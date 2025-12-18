@@ -1,6 +1,5 @@
 package org.seongbuksquare.locallinkbackend.global.exception;
 
-
 import lombok.Getter;
 import org.seongbuksquare.locallinkbackend.global.exception.model.BaseErrorCode;
 

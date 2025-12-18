@@ -25,12 +25,10 @@ public class GlobalExceptionHandler {
 
     // Validation 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<BaseResponse<Object>> handleValidationException(
-            MethodArgumentNotValidException ex) {
-        String errorMessages =
-                ex.getBindingResult().getFieldErrors().stream()
-                        .map(e -> String.format("[%s] %s", e.getField(), e.getDefaultMessage()))
-                        .collect(Collectors.joining(" / "));
+    public ResponseEntity<BaseResponse<Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMessages = ex.getBindingResult().getFieldErrors().stream()
+                .map(e -> String.format("[%s] %s", e.getField(), e.getDefaultMessage()))
+                .collect(Collectors.joining(" / "));
         log.warn("Validation 오류 발생: {}", errorMessages);
         return ResponseEntity.badRequest().body(BaseResponse.error(400, errorMessages));
     }
@@ -43,4 +41,3 @@ public class GlobalExceptionHandler {
                 .body(BaseResponse.error(500, "예상치 못한 서버 오류가 발생했습니다."));
     }
 }
-

@@ -2,6 +2,21 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
+    id "com.diffplug.spotless" version "6.25.0"
+}
+
+spotless {
+    java {
+        target 'src/*/java/**/*.java' // 모든 자바 파일 대상
+
+        // 특정 가이드를 따르고 싶지 않다면 아래 기본 규칙들만 적용해도 충분합니다.
+        importOrder()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        indentWithSpaces(4)
+        palantirJavaFormat()
+    }
 }
 
 group = 'org.seongbuksquare.locallink'

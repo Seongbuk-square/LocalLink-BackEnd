@@ -46,14 +46,12 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public UserDetailsService userDetailsService() {
 
-        UserDetails admin =
-                User.builder()
-                        .username(username)
-                        .password(passwordEncoder().encode(password))
-                        .roles("ADMIN")
-                        .build();
+        UserDetails admin = User.builder()
+                .username(username)
+                .password(passwordEncoder().encode(password))
+                .roles("ADMIN")
+                .build();
 
         return new InMemoryUserDetailsManager(admin);
     }
 }
-

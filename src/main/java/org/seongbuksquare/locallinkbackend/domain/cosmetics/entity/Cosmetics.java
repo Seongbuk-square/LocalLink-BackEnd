@@ -1,40 +1,40 @@
 package org.seongbuksquare.locallinkbackend.domain.cosmetics.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="cosmetics")
+@Table(
+        name = "cosmetics",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"ranking"}) // 테이블 레벨에서 명시적으로 유니크 제약 추가
+        })
 public class Cosmetics {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cosmeticId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true) // ✅ ranking은 고유해야 함
     private Integer ranking;
 
     @Column(nullable = false)
     private String cosmeticImageKey;
 
-    // 1:N
     @OneToMany(mappedBy = "cosmetics", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<CosmeticsTrans> cosmeticsTransList = new ArrayList<>();
 
-    // 편의 메서드 (양방향 연결)
-    public void addTranslation(CosmeticsTrans cosmeticsTrans) { // 번역이 추가됐을때
-        cosmeticsTransList.add(cosmeticsTrans); // Cosmetics에서 인식할 수 있게 cosmeticsTrans 객체 추가
-        cosmeticsTrans.setCosmetics(this); // cosmeticsTrans 객체의 cosmetic 필드도 이 cosmetic 객체로 수정
+    public void addTranslation(CosmeticsTrans cosmeticsTrans) {
+        cosmeticsTransList.add(cosmeticsTrans);
+        cosmeticsTrans.setCosmetics(this);
     }
 }

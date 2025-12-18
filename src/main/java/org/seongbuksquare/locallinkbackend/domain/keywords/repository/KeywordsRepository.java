@@ -1,10 +1,8 @@
 package org.seongbuksquare.locallinkbackend.domain.keywords.repository;
 
-import org.seongbuksquare.locallinkbackend.domain.keywords.dto.response.KeywordsResponse;
+import java.util.List;
 import org.seongbuksquare.locallinkbackend.domain.keywords.entity.Keywords;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface KeywordsRepository extends JpaRepository<Keywords, Integer> {
 
