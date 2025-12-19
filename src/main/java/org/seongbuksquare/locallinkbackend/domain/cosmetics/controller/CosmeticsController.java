@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/v1")
 @Tag(name = "cosmetics", description = "화장품 관련 API")
 public class CosmeticsController {
     private final CosmeticsService cosmeticsService;
